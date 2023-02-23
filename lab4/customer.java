@@ -2,18 +2,19 @@ package lab4;
 
 import java.io.*;
 
-public class customer extends buyproducts {
+public class customer {
     String name;
     String phone_number;
     float grand_total;
     byte bill_number;
+    orders order;
 
     customer() {
         name = phone_number = "";
         grand_total = 0.0f;
         bill_number = 0;
+        order = new orders();
     }
-
 
     protected void accept_details() throws IOException {
         boolean flag;
@@ -36,16 +37,18 @@ public class customer extends buyproducts {
                 flag = false;
             }
         } while (!flag);
+        order.order_products();
     }
 
     protected void generate_bill() {
-        System.out.println("\n\n*********************************************Generated Bill*********************************************\n\n");
-        System.out.println("Bill Number: "+this.bill_number+"\nName: " + this.name + "                      Phone Number: " + this.phone_number + "\n\n");
-        this.view_productlist();
-        for (buyproducts buyproducts : this.shoppingList) this.grand_total += buyproducts.product_total;
-        System.out.println("\n\nGrand Total: "+this.grand_total);
-        System.out.println("\n\n********************************************************************************************************");
+        System.out.println(
+                "\n\n*********************************************Generated Bill*********************************************\n\n");
+        System.out.println("Bill Number: " + this.bill_number + "\nName: " + this.name
+                + "                      Phone Number: " + this.phone_number + "\n\n");
+        order.view_productlist();
+        System.out.println("\n\nGrand Total: " + this.order.grand_total);
+        System.out.println(
+                "\n\n********************************************************************************************************");
     }
 
-    
 }

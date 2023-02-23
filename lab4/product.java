@@ -8,10 +8,13 @@ public class product extends category{
     static ArrayList<String> unique_product_pids = new ArrayList<>();
     static ArrayList<Float> unique_price = new ArrayList<>();
     static ArrayList<String> respective_category_ids = new ArrayList<>();
+    static ArrayList<Byte> product_count = new ArrayList<>();
+    static ArrayList<String> product_description = new ArrayList<>();
     protected String pid,product_name;
     protected float price;
     protected byte quantity;
     protected short availablequantity;
+    protected String product_desc;
 
     product(){
         super();
@@ -30,11 +33,20 @@ public class product extends category{
         return false;
     }
 
+    static boolean display_all_products(){
+        int j=1;
+        for( int i=0;i<unique_products.size();i++ ) 
+            System.out.println((j++) + ") "+unique_products.get(i)+"|||||||||||| product id: "+unique_product_pids.get(i));
+        return false;
+    }
+
     private void get_details1(){
         for( int i=0;i<unique_product_count;i++ ){
             if(this.product_name.equalsIgnoreCase(unique_products.get(i))){
                 this.pid = unique_product_pids.get(i);
                 this.category_id = respective_category_ids.get(i);
+                this.product_desc = product_description.get(i);
+                this.category_name = category_deets.get(this.category_id);
                 break;
             }
         }
@@ -57,11 +69,11 @@ public class product extends category{
     }
 
     protected void display_details(){
-        this.get_category();
         System.out.print("Product Name: "+product_name);
         //super.display_details();
         System.out.print("| Quantity: "+quantity);
-        System.out.print("| Price per item(in rupees): "+price+"| ");
+        System.out.println("| Price per item(in rupees): "+price+"| ");
+        System.out.println("Product Description: "+product_desc);
     }
 
 }

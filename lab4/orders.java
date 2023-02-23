@@ -2,23 +2,28 @@ package lab4;
 
 import java.io.*;
 import java.util.ArrayList;
-public class buyproducts extends product{
+public class orders{
 
-    float product_total;
-    ArrayList<buyproducts> shoppingList;
-    public buyproducts(){
-        this.product_total = 0.0f;
+    float grand_total;
+    ArrayList<product> shoppingList;
+    ArrayList<Float> total_item_price;
+    public orders(){
+        this.grand_total = 0.0f;
         shoppingList = new ArrayList<>();
+        total_item_price = new ArrayList<>();
     }
+
+
 
     protected void order_products()throws IOException{
         BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
+        product.display_all_products();
         do {
-            buyproducts obj = new buyproducts();
+            product obj = new product();
             System.out.print("\n\nEnter the name of the product : ");
             obj.product_name = br.readLine();
             if(obj.product_name.compareTo(" ") == 0) break;
-            if(!check_product_availability(obj.product_name)){
+            if(! product.check_product_availability(obj.product_name)){
                 System.out.println("\nProduct not Available. Please try again");
                 continue;
             }
@@ -28,19 +33,20 @@ public class buyproducts extends product{
             shoppingList.add(obj);
         }while(true);
 
-        for (buyproducts buyproducts : shoppingList) {
-            buyproducts.product_total = buyproducts.price * buyproducts.quantity;
-        }
+        for (product item : shoppingList) 
+            total_item_price.add(item.price * item.quantity);
+
+        for (float price: total_item_price)
+            this.grand_total += price;
     }
 
 
     protected void view_productlist(){
-        for(int i=0;i<shoppingList.size();i++)
+        for(product item: this.shoppingList)
         {
-            System.out.print((i+1)+")");
-            shoppingList.get(i).display_details();
-            shoppingList.get(i).product_total = shoppingList.get(i).price * shoppingList.get(i).quantity;
-            System.out.println("Total price: "+shoppingList.get(i).product_total);
+            System.out.print(shoppingList.indexOf(item)+1+")");
+            item.display_details();
+            System.out.println("Total price: "+this.total_item_price.get(shoppingList.indexOf(item)));
         }
     }
 

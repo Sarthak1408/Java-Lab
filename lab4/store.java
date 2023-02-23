@@ -3,54 +3,43 @@ package lab4;
 import java.io.*;
 import java.util.ArrayList;
 
-public class store extends customer {
+public class store  {
 
     static byte bill_count;
+    static BufferedReader prod_data;
 
     static {
-        product.unique_product_count=5;
+        product.unique_product_count=0;
+        try {
+            prod_data = new BufferedReader(new FileReader("productlist.csv"));
+            System.out.println("File reading successful");
+            String row;
+            boolean flag= false;
+            while( (row= prod_data.readLine()) != null){
+                if(!flag){
+                    flag = true;
+                    continue;
+                }
+                product.unique_product_count+=1;
+                String[] data = row.split(",");
+                product.unique_products.add(data[0]);
+                product.unique_product_pids.add(data[1]);
+                product.respective_category_ids.add(data[4]);
+                product.unique_price.add(Float.parseFloat(data[2]));
+                product.product_count.add(Byte.parseByte(data[3]));
+                product.product_description.add(data[7]);
 
-        /*File reading will be performed here later */
-        category.category_count = 3;
+                if(!category.category_deets.containsKey(data[4]))
+                    category.category_deets.put(data[4], data[5]);
 
-        category.unique_category.add("C0001");
-        category.unique_category.add("C0002");
-        category.unique_category.add("C0003");
+            }
+            System.out.println(category.category_deets);
+        } catch (IOException e) {
+            System.out.println("Files not found");
+        }
+            
 
-        category.category_details.add("Soft Drinks");
-        category.category_details.add("Biscuits");
-        category.category_details.add("Ready to Eat");
-
-        category.category_description.add("Carbonated Drink");
-        category.category_description.add("Cookies");
-        category.category_description.add("Ready in 5 minutes");
-
-        product.unique_products.add("Coca Cola");
-        product.unique_products.add("Parle-G");
-        product.unique_products.add("Hide and Seek");
-        product.unique_products.add("Thumbs Up");
-        product.unique_products.add("Maggi");
-        
-        product.unique_product_pids.add("P0001");
-        product.unique_product_pids.add("P0002");
-        product.unique_product_pids.add("P0003");
-        product.unique_product_pids.add("P0004");
-        product.unique_product_pids.add("P0005");
-
-        product.respective_category_ids.add("C0001");
-        product.respective_category_ids.add("C0002");
-        product.respective_category_ids.add("C0002");
-        product.respective_category_ids.add("C0001");
-        product.respective_category_ids.add("C0003");
-
-        product.unique_price.add(10.0F);
-        product.unique_price.add(20.0F);
-        product.unique_price.add(30.0F);
-        product.unique_price.add(40.0F);
-        product.unique_price.add(50.0F);
-        /*File reading will be performed here later */
-
-        System.out.print("\033[H\033[2J");
+        // System.out.print("\033[H\033[2J");
         System.out.flush();
         System.out.println("HELLO and Welcome to All-in-One Store!!");
         bill_count = 0;
@@ -78,9 +67,8 @@ public class store extends customer {
                     bill_count += 1;
                     obj.bill_number = bill_count;
                     obj.accept_details();
-                    obj.order_products();
                     new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
-                    if (obj.shoppingList.size() == 0) break;
+                    if (obj.order.shoppingList.size() == 0) break;
                     obj.generate_bill();
                     customer_list.add(obj);
                     br.readLine();
@@ -89,9 +77,9 @@ public class store extends customer {
                     String phonenumber;
                     System.out.print("\nEnter phone number to search in the list: ");
                     phonenumber = br.readLine();
-                    for (customer customer : customer_list) {
-                        if ((customer.phone_number).compareTo(phonenumber) == 0) {
-                            customer.generate_bill();
+                    for (customer person : customer_list) {
+                        if ((person.phone_number).compareTo(phonenumber) == 0) {
+                            person.generate_bill();
                         }
                     }
                     br.readLine();
